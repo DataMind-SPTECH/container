@@ -1,39 +1,32 @@
 #!/bin/bash
-
-java -version #verifica versao atual do java
-if [ $? = 0 ]; #se retorno for igual a 0
-then #entao,
-	echo "java instalado" #print no terminal
-else #se nao,
-	echo "java não instalado" #print no terminal
-	echo "gostaria de instalar o java? [s/n]" #print no terminal
-	read get #variável que guarda resposta do usuário
-	if [ \"$get\" == \"s\" ]; #se retorno for igual a s
-then #entao
-	sudo apt install openjdk-17-jre -y #executa instalacao do java
-	fi #fecha o 2º if
-fi #fecha o 1º if
-
 docker --version #verifica versao atual do docker
 if [ $? = 0 ]; #se retorno for igual a 0
 then #entao,
         echo "docker instalado" #print no terminal
 else #se nao,
         echo "docker não instalado" #print no terminal
-        echo "gostaria de instalar o docker? [s/n]" #print no terminal
-        read get #variável que guarda resposta do usuário
-        if [ \"$get\" == \"s\" ]; #se retorno for igual a s
-then #entao
+        echo "Instalando docker..." #print no terminal
         sudo apt install docker.io
 	sudo systemctl start docker
 	sudo systemctl enable docker
-        fi #fecha o 2º if
 fi #fecha o 1º if
 
+curl --version
+if [ $? = 0 ];
+then
+	echo "curl instalado"
+else
+	echo "instalando curl..."
+	sudo apt install curl
+if
 
 sudo docker pull ryanzin1380/datamind:1.0
 sudo docker pull ryanzin1380/datamind_bd:1.0
+sudo docker pull anilmar/datamind_java:1.0
 
+curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main/cronjob
+mkdir arquivos_sql
+curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
 
 sudo docker-compose version #verifica versao atual do compose
 if [ $? = 0 ]; #se retorno for igual a 0
@@ -41,16 +34,30 @@ then #entao,
         echo "docker compose instalado" #print no terminal
 else #se nao,
         echo "docker compose não instalado" #print no terminal
-        echo "gostaria de instalar o docker-compose? [s/n]" #print no terminal
-        read get #variável que guarda resposta do usuário
-        if [ \"$get\" == \"s\" ]; #se retorno for igual a s
-then #entao
-         sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  #executa instalacao do compose
-	 sudo chmod +x /usr/local/bin/docker-compose
-	fi #fecha o 2º if
+        echo "instalando docker compose..." #print no terminal
+        sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  #executa instalacao do compose
+	sudo chmod +x /usr/local/bin/docker-compose
 fi #fecha o 1º if
 
-if sudo docker-compose up -d;
+echo "Por favor, insira as variáveis de ambiente necessárias:"
+
+read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+read -p "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+read -p "AWS_SESSION_TOKEN: " AWS_SESSION_TOKEN
+read -p "DB_USER: " DB_USER
+read -p "DB_PASSWORD: " DB_PASSWORD
+read -p "NAME_BUCKET: " NAME_BUCKET
+
+# Inicia os containers com as variáveis de ambiente
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
+DB_USER=$DB_USER \
+DB_PASSWORD=$DB_PASSWORD \
+NAME_BUCKET=$NAME_BUCKET \
+sudo docker-compose up -d
+
+if [ $? - 0 ];
 then echo "Compose rodando em segundo plano"
         else
         echo "Execução em segundo plano falhou, iniciando normalmente"

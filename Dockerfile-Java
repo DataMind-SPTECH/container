@@ -1,0 +1,26 @@
+# Usa a imagem base OpenJDK 21
+FROM openjdk:21-slim
+
+# Atualiza os pacotes, instala curl e cron
+RUN apt-get update && apt-get install -y curl cron && apt-get clean
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Baixa o arquivo JAR do repositório e renomeia
+RUN curl -o Projeto-Java.jar https://raw.githubusercontent.com/DataMind-SPTECH/Projeto-Java/main/Projeto-Java.jar
+
+# Copia o arquivo de configuração do cron
+COPY cronjob /etc/cron.d/projeto-java-cron
+
+# Define as permissões corretas para o arquivo cron
+RUN chmod 0644 /etc/cron.d/projeto-java-cron
+
+# Aplica a configuração do cron
+RUN crontab /etc/cron.d/projeto-java-cron
+
+# Cria um log para o cron
+RUN touch /var/log/cron.log
+
+# Comando para iniciar o cron e o log
+CMD cron && tail -f /var/log/cron.log
