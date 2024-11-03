@@ -1,7 +1,7 @@
 services:
   mysql:
     container_name: container_datamind_bd
-    image: ryanzin1380/datamind_bd:1.0
+    image: anilmar/datamind_bd:1.0
     restart: always
     ports:
       - "3306:3306"
@@ -10,7 +10,7 @@ services:
 
   node:
     container_name: container_datamind_site
-    image: ryanzin1380/datamind:1.0
+    image: anilmar/datamind:1.0
     restart: always
     ports:
       - "3333:3333"
@@ -19,7 +19,7 @@ services:
 
   java:
     container_name: container_datamind_java
-    image: anilmar/datamind_java:3.0
+    image: anilmar/datamind_java:1.0
     restart: always
     depends_on:
       - mysql

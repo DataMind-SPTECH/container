@@ -20,16 +20,14 @@ else
 	sudo apt install curl
 fi
 
-sudo docker pull ryanzin1380/datamind:1.0
-sudo docker pull ryanzin1380/datamind_bd:1.0
-sudo docker pull anilmar/datamind_java:3.0
+sudo docker pull anilmar/datamind:1.0
+sudo docker pull anilmar/datamind_bd:1.0
+sudo docker pull anilmar/datamind_java:1.0
 
 curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main/cronjob
 curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/container/main/docker-compose.yml
 mkdir arquivos_sql
 curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
-curl -o wait-bd.sh https://raw.githubusercontent.com/DataMind-SPTECH/container/main/wait-bd.sh
-chmod +x ./wait-bd.sh
 
 sudo docker-compose version #verifica versao atual do compose
 if [ $? = 0 ]; #se retorno for igual a 0
@@ -69,4 +67,3 @@ then echo "Compose rodando em segundo plano"
         echo "Execução em segundo plano falhou, iniciando normalmente"
              sudo docker-compose up
 fi #fecha o 1º if
-
