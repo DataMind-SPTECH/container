@@ -18,13 +18,14 @@ then
 else
 	echo "instalando curl..."
 	sudo apt install curl
-if
+fi
 
 sudo docker pull ryanzin1380/datamind:1.0
 sudo docker pull ryanzin1380/datamind_bd:1.0
 sudo docker pull anilmar/datamind_java:1.0
 
 curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main/cronjob
+curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/container/main/docker-compose.yml
 mkdir arquivos_sql
 curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
 
@@ -49,15 +50,16 @@ read -p "DB_PASSWORD: " DB_PASSWORD
 read -p "NAME_BUCKET: " NAME_BUCKET
 
 # Inicia os containers com as variáveis de ambiente
-AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
-DB_USER=$DB_USER \
-DB_PASSWORD=$DB_PASSWORD \
-NAME_BUCKET=$NAME_BUCKET \
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN
+export DB_USER
+export DB_PASSWORD
+export NAME_BUCKET
+
 sudo docker-compose up -d
 
-if [ $? - 0 ];
+if [ $? = 0 ];
 then echo "Compose rodando em segundo plano"
         else
         echo "Execução em segundo plano falhou, iniciando normalmente"

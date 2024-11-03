@@ -1,14 +1,14 @@
 services:
   mysql:
     container_name: container_datamind_bd
-    image: ryanzin1380/datamind_bd
+    image: ryanzin1380/datamind_bd:1.0
     restart: always
     ports:
       - "3306:3306"
 
   node:
     container_name: container_datamind_site
-    image: ryanzin1380/datamind
+    image: ryanzin1380/datamind:1.0
     restart: always
     ports:
       - "3333:3333"
