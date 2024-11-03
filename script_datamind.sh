@@ -22,7 +22,7 @@ fi
 
 sudo docker pull ryanzin1380/datamind:1.0
 sudo docker pull ryanzin1380/datamind_bd:1.0
-sudo docker pull anilmar/datamind_java:2.0
+sudo docker pull anilmar/datamind_java:3.0
 
 curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main/cronjob
 curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/container/main/docker-compose.yml

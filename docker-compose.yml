@@ -19,7 +19,7 @@ services:
 
   java:
     container_name: container_datamind_java
-    image: anilmar/datamind_java:2.0
+    image: anilmar/datamind_java:3.0
     restart: always
     depends_on:
       - mysql
