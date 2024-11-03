@@ -29,6 +29,7 @@ curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/con
 mkdir arquivos_sql
 curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
 curl -o wait-bd.sh https://raw.githubusercontent.com/DataMind-SPTECH/container/main/wait-bd.sh
+chmod +x ./wait-bd.sh
 
 sudo docker-compose version #verifica versao atual do compose
 if [ $? = 0 ]; #se retorno for igual a 0
@@ -46,6 +47,7 @@ echo "Por favor, insira as variáveis de ambiente necessárias:"
 read -p "AWS ACCESS KEY ID: " awsAccessKeyId
 read -p "AWS SECRET ACCESS KEY: " awsSecretAccessKey
 read -p "AWS SESSION TOKEN: " awsSessionToken
+read -p "DB HOST: " dbHost
 read -p "DB USER: " dbUser
 read -p "DB PASSWORD: " dbPassword
 read -p "NAME BUCKET: " nameBucket
@@ -54,6 +56,7 @@ read -p "NAME BUCKET: " nameBucket
 export AWS_ACCESS_KEY_ID=$awsAccessKeyId
 export AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey
 export AWS_SESSION_TOKEN=$awsSessionToken
+export DB_HOST=$dbHost
 export DB_USER=$dbUser
 export DB_PASSWORD=$dbPassword
 export NAME_BUCKET=$nameBucket
