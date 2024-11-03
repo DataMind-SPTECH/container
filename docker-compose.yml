@@ -23,7 +23,6 @@ services:
     restart: always
     depends_on:
       - mysql
-    entrypoint: ["./wait-bd.sh", "mysql:3306", "--", "java", "-jar", "Projeto-JAVA-1.0_SNAPSHOT-jar-with-dependencies.jar"]
     environment:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}

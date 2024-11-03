@@ -10,6 +10,12 @@ WORKDIR /app
 # Baixa o arquivo JAR do repositório e renomeia
 RUN curl -o Projeto-JAVA-1.0-SNAPSHOT-jar-with-dependencies.jar https://raw.githubusercontent.com/DataMind-SPTECH/Projeto-Java/main/Projeto-JAVA-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+# Copie o script de espera para o container
+COPY wait-bd.sh .
+
+# Torne o script de espera executável
+RUN chmod +x /app/wait-bd.sh
+
 # Copia o arquivo de configuração do cron
 COPY cronjob /etc/cron.d/projeto-java-cron
 
@@ -23,4 +29,5 @@ RUN crontab /etc/cron.d/projeto-java-cron
 RUN touch /var/log/cron.log
 
 # Comando para iniciar o cron e o log
-CMD cron && tail -f /var/log/cron.log
+CMD cron && tail -f /var/log/cron.log & /app/wait-bd.sh "mysql:3306" "--" "java" "-jar" "Projeto-JAVA-1.0-SNAPSHOT-jar-with-dependencies.jar"
+
