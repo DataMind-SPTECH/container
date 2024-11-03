@@ -5,6 +5,8 @@ services:
     restart: always
     ports:
       - "3306:3306"
+    networks:
+      - app-network
 
   node:
     container_name: container_datamind_site
@@ -12,11 +14,15 @@ services:
     restart: always
     ports:
       - "3333:3333"
+    networks:
+      - app-network
 
   java:
     container_name: container_datamind_java
     image: anilmar/datamind_java:2.0
     restart: always
+    depends_on:
+      - mysql
     environment:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -24,3 +30,9 @@ services:
       NAME_BUCKET: ${NAME_BUCKET}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

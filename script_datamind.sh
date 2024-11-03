@@ -42,22 +42,22 @@ fi #fecha o 1º if
 
 echo "Por favor, insira as variáveis de ambiente necessárias:"
 
-read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
-read -p "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
-read -p "AWS_SESSION_TOKEN: " AWS_SESSION_TOKEN
-read -p "DB_USER: " DB_USER
-read -p "DB_PASSWORD: " DB_PASSWORD
-read -p "NAME_BUCKET: " NAME_BUCKET
+read -p "AWS ACCESS KEY ID: " awsAccessKeyId
+read -p "AWS SECRET ACCESS KEY: " awsSecretAccessKey
+read -p "AWS SESSION TOKEN: " awsSessionToken
+read -p "DB USER: " dbUser
+read -p "DB PASSWORD: " dbPassword
+read -p "NAME BUCKET: " nameBucket
 
 # Inicia os containers com as variáveis de ambiente
-export AWS_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY
-export AWS_SESSION_TOKEN
-export DB_USER
-export DB_PASSWORD
-export NAME_BUCKET
+export AWS_ACCESS_KEY_ID=$awsAccessKeyId
+export AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey
+export AWS_SESSION_TOKEN=$awsSessionToken
+export DB_USER=$dbUser
+export DB_PASSWORD=$dbPassword
+export NAME_BUCKET=$nameBucket
 
-sudo docker-compose up -d
+sudo -E docker-compose up -d
 
 if [ $? = 0 ];
 then echo "Compose rodando em segundo plano"
