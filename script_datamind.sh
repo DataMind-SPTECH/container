@@ -28,6 +28,8 @@ curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main
 curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/container/main/docker-compose.yml
 mkdir arquivos_sql
 curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
+curl -o wait-bd.sh http://raw.githubusercontent.com/DataMind-SPTECH/container/main/wait-bd.sh
+chmod +x ./wait-bd.sh
 
 sudo docker-compose version #verifica versao atual do compose
 if [ $? = 0 ]; #se retorno for igual a 0
