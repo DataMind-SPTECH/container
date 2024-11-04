@@ -10,6 +10,12 @@ WORKDIR /app
 # Baixa o arquivo JAR do repositório e renomeia
 RUN curl -o Projeto-JAVA.jar https://raw.githubusercontent.com/DataMind-SPTECH/Projeto-Java/main/Projeto-JAVA-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+# Copia o script de inicialização para o container
+COPY start.sh /app/start.sh
+
+# Define as permissões corretas para o script
+RUN chmod +x /app/start.sh
+
 # Copia o arquivo de configuração do cron
 COPY cronjob /etc/cron.d/projeto-java-cron
 

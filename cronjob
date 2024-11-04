@@ -1,1 +1,1 @@
-* * * * * /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
+* * * * * /app/start.sh >> /var/log/cron.log 2>&1
