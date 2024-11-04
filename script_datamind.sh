@@ -6,7 +6,8 @@ then #entao,
 else #se nao,
         echo "docker não instalado" #print no terminal
         echo "Instalando docker..." #print no terminal
-        sudo apt install docker.io
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install docker.io -y
 	sudo systemctl start docker
 	sudo systemctl enable docker
 fi #fecha o 1º if

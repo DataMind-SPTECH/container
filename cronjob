@@ -1,1 +1,1 @@
-* * * * * java -jar /app/Projeto-JAVA-1.0-SNAPSHOT-jar-with-dependencies.jar >> /var/log/cron.log 2>&1
+* * * * * java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
