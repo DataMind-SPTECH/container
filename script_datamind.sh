@@ -25,10 +25,7 @@ sudo docker pull anilmar/datamind:1.0
 sudo docker pull anilmar/datamind_bd:1.0
 sudo docker pull anilmar/datamind_java:1.0
 
-curl -o cronjob https://raw.githubusercontent.com/DataMind-SPTECH/container/main/cronjob
 curl -o docker-compose.yml https://raw.githubusercontent.com/DataMind-SPTECH/container/main/docker-compose.yml
-mkdir arquivos_sql
-curl -o ./arquivos_sql/banco_datamind.sql https://raw.githubusercontent.com/DataMind-SPTECH/container/main/arquivos_sql/banco_datamind.sql
 
 sudo docker-compose version #verifica versao atual do compose
 if [ $? = 0 ]; #se retorno for igual a 0
@@ -68,3 +65,23 @@ then echo "Compose rodando em segundo plano"
         echo "Execução em segundo plano falhou, iniciando normalmente"
              sudo docker-compose up
 fi #fecha o 1º if
+
+# Cria o script run_datamind.sh com as variáveis de ambiente
+echo "Criando o script run_datamind.sh..."
+
+cat <<EOF > run_datamind.sh
+#!/bin/bash
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN DB_HOST=$DB_HOST DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD NAME_BUCKET=$NAME_BUCKET /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
+EOF
+
+# Torna o script executável
+chmod +x run_datamind.sh
+
+# Copia o script para o container Java
+sudo docker cp run_datamind.sh container_datamind_java:/app/run_datamind.sh
+
+# Cria o cronjob dentro do container Java
+echo "Configurando o cronjob no container..."
+sudo docker exec -it container_datamind_java bash -c "echo '* * * * * root /app/run_datamind.sh' > /etc/cron.d/datamind_cron && chmod 644 /etc/cron.d/datamind_cron && crontab /etc/cron.d/datamind_cron && service cron restart"
+
+echo "Configuração completa."
