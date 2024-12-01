@@ -43,11 +43,13 @@ echo "Por favor, insira as variáveis de ambiente necessárias:"
 read -p "AWS ACCESS KEY ID: " awsAccessKeyId
 read -p "AWS SECRET ACCESS KEY: " awsSecretAccessKey
 read -p "AWS SESSION TOKEN: " awsSessionToken
+read -p "LINK SLACK: " linkSlack
 
 # Inicia os containers com as variáveis de ambiente
 export AWS_ACCESS_KEY_ID=$awsAccessKeyId
 export AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey
 export AWS_SESSION_TOKEN=$awsSessionToken
+export LINK_SLACK=$linkSlack
 export DB_HOST="mysql"
 export DB_DATABASE="datamind"
 export DB_USER="datamind_adm"
@@ -65,7 +67,7 @@ fi #fecha o 1º if
 
 cat <<EOF > run_datamind.sh
 #!/bin/bash
-AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN DB_HOST=$DB_HOST DB_DATABASE=$DB_DATABASE DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD NAME_BUCKET=$NAME_BUCKET /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN DB_HOST=$DB_HOST DB_DATABASE=$DB_DATABASE DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_PORT=$DB_PORT NAME_BUCKET=$NAME_BUCKET LINK_SLACK=$LINK_SLACK /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
 EOF
 
 # Torna o script executável
@@ -84,9 +86,9 @@ AMBIENTE_PROCESSO=desenvolvimento
 # Configurações de conexão com o banco de dados
 DB_HOST=$DB_HOST
 DB_DATABASE=$DB_DATABASE
-DB_USER=DB_USER
-DB_PASSWORD=DB_PASSWORD
-DB_PORT=3306
+DB_USER=$DB_USER
+DB_PASSWORD=$DB_PASSWORD
+DB_PORT=$DB_PORT
 
 # Configurações do servidor de aplicação
 APP_PORT=3333
@@ -98,5 +100,8 @@ GEMINI_API='AIzaSyDvkhMiz-PaFvnnaHHWgxjsh8tV4pylVik'
 
 # importante: caso sua senha contenha caracteres especiais, insira-a entre 'aspas'
 EOF
+
+# Copia o .env.dev para o container Site
+sudo docker cp run_datamind.sh container_datamind_site:/app/.env.dev
 
 echo "Configuração completa."

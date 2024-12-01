@@ -99,7 +99,7 @@ INSERT INTO empresa (nomeEmpresa, cnpj, fkDataset) VALUES
 
 -- Inserir dados na tabela funcionario
 INSERT INTO funcionario (nome, email, senha, cpf, fkEmpresa, fkCargo) VALUES
-('João Silva', '', 'senha123', '12345678901', 1, 1);
+('João Silva', 'joao@mcdonalds.com', 'senha123', '12345678901', 1, 1);
 
 -- Inserir dados na tabela categoria
 INSERT INTO categoria (idCategoria, descricao) VALUES
