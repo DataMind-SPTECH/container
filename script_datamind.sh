@@ -43,19 +43,16 @@ echo "Por favor, insira as variáveis de ambiente necessárias:"
 read -p "AWS ACCESS KEY ID: " awsAccessKeyId
 read -p "AWS SECRET ACCESS KEY: " awsSecretAccessKey
 read -p "AWS SESSION TOKEN: " awsSessionToken
-read -p "DB HOST: " dbHost
-read -p "DB USER: " dbUser
-read -p "DB PASSWORD: " dbPassword
-read -p "NAME BUCKET: " nameBucket
 
 # Inicia os containers com as variáveis de ambiente
 export AWS_ACCESS_KEY_ID=$awsAccessKeyId
 export AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey
 export AWS_SESSION_TOKEN=$awsSessionToken
-export DB_HOST=$dbHost
-export DB_USER=$dbUser
-export DB_PASSWORD=$dbPassword
-export NAME_BUCKET=$nameBucket
+export DB_HOST="mysql"
+export DB_DATABASE="datamind"
+export DB_USER="datamind_adm"
+export DB_PASSWORD="datamind_adm"
+export NAME_BUCKET="datamind-bucket"
 
 sudo -E docker-compose up -d
 
@@ -66,12 +63,9 @@ then echo "Compose rodando em segundo plano"
              sudo docker-compose up
 fi #fecha o 1º if
 
-# Cria o script run_datamind.sh com as variáveis de ambiente
-echo "Criando o script run_datamind.sh..."
-
 cat <<EOF > run_datamind.sh
 #!/bin/bash
-AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN DB_HOST=$DB_HOST DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD NAME_BUCKET=$NAME_BUCKET /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN DB_HOST=$DB_HOST DB_DATABASE=$DB_DATABASE DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD NAME_BUCKET=$NAME_BUCKET /usr/local/openjdk-21/bin/java -jar /app/Projeto-JAVA.jar >> /var/log/cron.log 2>&1
 EOF
 
 # Torna o script executável
@@ -81,7 +75,28 @@ chmod +x run_datamind.sh
 sudo docker cp run_datamind.sh container_datamind_java:/app/run_datamind.sh
 
 # Cria o cronjob dentro do container Java
-echo "Configurando o cronjob no container..."
 sudo docker exec -it container_datamind_java bash -c "echo '* * * * * root /app/run_datamind.sh' > /etc/cron.d/datamind_cron && chmod 644 /etc/cron.d/datamind_cron && crontab /etc/cron.d/datamind_cron && service cron restart"
+
+# Reescrevendo o .env.dev
+cat <<EOF > .env.dev
+AMBIENTE_PROCESSO=desenvolvimento
+
+# Configurações de conexão com o banco de dados
+DB_HOST=$DB_HOST
+DB_DATABASE=$DB_DATABASE
+DB_USER=DB_USER
+DB_PASSWORD=DB_PASSWORD
+DB_PORT=3306
+
+# Configurações do servidor de aplicação
+APP_PORT=3333
+APP_HOST=localhost
+
+# GEMINI API KEY
+
+GEMINI_API='AIzaSyDvkhMiz-PaFvnnaHHWgxjsh8tV4pylVik'
+
+# importante: caso sua senha contenha caracteres especiais, insira-a entre 'aspas'
+EOF
 
 echo "Configuração completa."
