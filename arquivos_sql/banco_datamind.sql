@@ -1,7 +1,7 @@
 CREATE DATABASE datamind
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
-  
+
 use datamind;
 
 
@@ -85,32 +85,6 @@ CREATE TABLE palavrasChave (
  fkCategoria INT,
  FOREIGN KEY (fkCategoria) REFERENCES categoria(idCategoria)
 );
-select * from recomendacoesIA;
-
-INSERT INTO dataset (url, nome, descricao) VALUES
-('http://dataset1.com', 'Dataset 1', 'Dados do McDonalds');
-
--- Inserir dados na tabela cargo
-INSERT INTO cargo (cargo) VALUES
-('Gerente'),
-('Analista'),
-('Desenvolvedor');
-
--- Inserir dados na tabela empresa
-INSERT INTO empresa (nomeEmpresa, cnpj, fkDataset) VALUES
-("McDonald's", '12345678000195', 1);
-
--- Inserir dados na tabela funcionario
-INSERT INTO funcionario (nome, email, senha, cpf, fkEmpresa, fkCargo) VALUES
-('João Silva', 'joao@mcdonalds.com', 'senha123', '12345678901', 1, 1);
-
--- Inserir dados na tabela categoria
-INSERT INTO categoria (idCategoria, descricao) VALUES
-(1, 'Qualidade do Produto'),
-(2, 'Atendimento'),
-(3, 'Tempo de espera'),
-(4, 'Experiência no Drive-thru'),
-(5, 'Experiência Geral');
 
 CREATE USER 'datamind_adm'@'%' IDENTIFIED BY 'datamind_adm';
 GRANT ALL PRIVILEGES ON *.* TO 'datamind_adm'@'%' WITH GRANT OPTION;
