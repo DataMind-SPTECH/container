@@ -54,6 +54,7 @@ export DB_HOST="mysql"
 export DB_DATABASE="datamind"
 export DB_USER="datamind_adm"
 export DB_PASSWORD="datamind_adm"
+export DB_PORT="3306"
 export NAME_BUCKET="datamind-bucket"
 
 sudo -E docker-compose up -d
@@ -77,7 +78,7 @@ chmod +x run_datamind.sh
 sudo docker cp run_datamind.sh container_datamind_java:/app/run_datamind.sh
 
 # Cria o cronjob dentro do container Java
-sudo docker exec -it container_datamind_java bash -c "echo '* * * * * root /app/run_datamind.sh' > /etc/cron.d/datamind_cron && chmod 644 /etc/cron.d/datamind_cron && crontab /etc/cron.d/datamind_cron && service cron restart"
+sudo docker exec -it container_datamind_java bash -c "echo '*/10 * * * * root /app/run_datamind.sh' > /etc/cron.d/datamind_cron && chmod 644 /etc/cron.d/datamind_cron && crontab /etc/cron.d/datamind_cron && service cron restart"
 
 # Reescrevendo o .env.dev
 cat <<EOF > .env.dev
@@ -102,6 +103,6 @@ GEMINI_API='AIzaSyDvkhMiz-PaFvnnaHHWgxjsh8tV4pylVik'
 EOF
 
 # Copia o .env.dev para o container Site
-sudo docker cp run_datamind.sh container_datamind_site:/app/.env.dev
+sudo docker cp .env.dev container_datamind_site:/app/.env.dev
 
 echo "Configuração completa."
