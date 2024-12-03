@@ -77,6 +77,9 @@ chmod +x run_datamind.sh
 # Copia o script para o container Java
 sudo docker cp run_datamind.sh container_datamind_java:/app/run_datamind.sh
 
+# Rodar o script
+sudo docker exec -it container_datamind_java bash -c "/app/run_datamind.sh"
+
 # Cria o cronjob dentro do container Java
 sudo docker exec -it container_datamind_java bash -c "echo '0 * * * * root /app/run_datamind.sh' > /etc/cron.d/datamind_cron && chmod 644 /etc/cron.d/datamind_cron && crontab /etc/cron.d/datamind_cron && service cron restart"
 
